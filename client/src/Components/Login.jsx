@@ -45,7 +45,7 @@ function Login() {
                 <button type="submit" className="w-full h-16 rounded-lg bg-gradient-to-t from-yellow-600 to bg-yellow-300 hover:from-yellow-300 hover:to-yellow-600 hover:scale-105 font-extrabold text-center">Login</button>
             </form>
             
-            <Link to="/" className="px-6 py-3 bg-gradient-to-t from-yellow-600 to-yellow-300 rounded-lg hover:from-yellow-300 hover:to-yellow-600 hover:scale-105 font-extrabold text-center">Go to Signup</Link>
+            <Link to="/" className="px-6 py-3 bg-gradient-to-t from-yellow-600 to-yellow-300 rounded-lg hover:from-yellow-300 hover:to-yellow-600 hover:scale-105 font-extrabold text-center mt-8">Go to Signup</Link>
         </div>
     );
 }
