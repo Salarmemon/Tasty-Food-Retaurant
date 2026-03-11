@@ -36,7 +36,7 @@ function Signup() {
 
 }
     return (
-        <div>
+        <>
             <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center md:text-6xl font-heading">Sign Up</h2>
             <p className="text-lg text-gray-600 mb-4 text-bold">Create an account to enjoy our delicious menu and exclusive offers. Sign up now to start your culinary journey with us!</p>
             <Link to="/home" className="skip w-36 cursor-pointer h-16 rounded-lg bg-gradient-to-t mt-8 from-yellow-600 to-yellow-300 mx-auto flex justify-center items-center hover:from-yellow-300 hover:to-yellow-600 hover:scale-105 font-extrabold text-center">Skip For Now</Link>
@@ -54,9 +54,13 @@ function Signup() {
                     <label htmlFor="password" className="block text-gray-700 font-bold mb-2">Password</label>
                     <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value) }name="password" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500" required/>
         
-                <button type="submit" className="w-full h-16 rounded-lg bg-gradient-to-t from-yellow-600 to bg-yellow-300 hover:from-yellow-300 hover:to-yellow-600 hover:scale-105 font-extrabold text-center">Sign Up</button>
+                <button type="submit" className="w-full h-16 rounded-lg bg-gradient-to-t from-yellow-600 to bg-yellow-300 hover:from-yellow-300 hover:to-yellow-600 hover:scale-105 font-extrabold text-center mt-12">Sign Up</button>
             </form>
-            </div>
+            <div className="text-center"> <h3 className="mx-auto text-center inline font-extralight mt-8">Already have an account?</h3>
+             <Link to="/login" className="login w-28 cursor-pointer h-16 rounded-lg bg-gradient-to-t mt-8 from-yellow-600 to-yellow-300 mx-auto  justify-center items-center hover:from-yellow-300 hover:to-yellow-600 hover:scale-105 font-extrabold text-center inline">Login</Link>
+</div>
+
+        </>
 
     );
 }
