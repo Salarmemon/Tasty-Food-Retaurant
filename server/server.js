@@ -16,6 +16,6 @@ app.get("/", (req, res) => {
 })
 
 
-console.log("Server Started");
+console.log(process.env.EMAIL_USER);
 
 app.listen(3000);
