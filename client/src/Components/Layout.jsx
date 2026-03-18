@@ -9,10 +9,11 @@ import OrderForm from "./OrderForm";
 import Signup from "./Signup";
 import Retry from "./Retry";
 import Login from "./Login";
+import ForgetPassword from "./Forgot-Password";
 
 function Layout() {
     const location = useLocation();
-    const isSignupPage = location.pathname === "/" || location.pathname === "/retry" || location.pathname === "/login";
+    const isSignupPage = location.pathname === "/" || location.pathname === "/retry" || location.pathname === "/login" || location.pathname === "/forgot-password";
     return (
         <div>
             {!isSignupPage && <Header />}
@@ -24,6 +25,7 @@ function Layout() {
                 <Route path="/orderform" element={<OrderForm />} />
                 <Route path="/retry" element={<Retry />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/forgot-password" element={<ForgetPassword/>} />
             </Routes>
             {!isSignupPage && <Contact />}
         </div>

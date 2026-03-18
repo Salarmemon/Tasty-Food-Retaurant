@@ -5,6 +5,17 @@ const pool = require('../db');
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 
+;
+const generateOtp = ()=> {
+    const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let otp = "";
+    for (let i = 0; i < 6; i++) {
+        otp += crypto.randomInt(numbers.length);
+    }
+    return otp
+}
+
+
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -105,6 +116,29 @@ router.post("/forgot-password", async (req, res) => {
     if (!email) {
         return res.status(500).json({message: "email is required"})
     }
+
+    try {
+        const userResult = await pool.query("SELECT id, email FROM users WHERE email = $1", [email])
+        if (userResult.rows.length === 0) {
+            return res.status(200).json({"message": "If this email exists, the verification link hass been sent"});
+        }
+        const user = userResult.rows[0];
+        const OTP = generateOtp();
+        await pool.query("UPDATE users SET user_otp = $1, user_otp_expires = $2", [OTP, new Date(Date.now() + 3000 * 60)]);
+        transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "OTP",
+            html: `<p>Use this OTP to reset your password</p>
+            <p>Please do not share this code to anyone ${OTP}</p>`
+        })
+
+        return res.status(200).json({message: "OTP sent succesfully to your email."});
+          
+    } catch(err) {
+        return res.status(500).json({message: "Internal server error"});
+    }
+
     
 })
-module.exports = router;
+module.exports = {authRoute: router};
