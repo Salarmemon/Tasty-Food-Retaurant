@@ -4,13 +4,14 @@ const bcrypt = require('bcrypt');
 const pool = require('../db'); 
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+const { userInfo } = require('os');
 
 ;
 const generateOtp = ()=> {
     const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     let otp = "";
     for (let i = 0; i < 6; i++) {
-        otp += crypto.randomInt(numbers.length);
+        otp += numbers[crypto.randomInt(numbers.length)];
     }
     return otp
 }
@@ -114,17 +115,17 @@ router.get("/verify/:token", async (req, res) => {
 router.post("/forgot-password", async (req, res) => {
     const { email } = req.body;
     if (!email) {
-        return res.status(500).json({message: "email is required"})
+        return res.status(400).json({message: "email is required"})
     }
 
     try {
-        const userResult = await pool.query("SELECT id, email FROM users WHERE email = $1", [email])
+        const userResult = await pool.query("SELECT user_id, email FROM users WHERE email = $1", [email])
         if (userResult.rows.length === 0) {
-            return res.status(200).json({"message": "If this email exists, the verification link hass been sent"});
+            return res.status(400).json({"message": "Email does not exist"});
         }
         const user = userResult.rows[0];
         const OTP = generateOtp();
-        await pool.query("UPDATE users SET user_otp = $1, user_otp_expires = $2", [OTP, new Date(Date.now() + 3000 * 60)]);
+        await pool.query("UPDATE users SET user_otp = $1, user_otp_expires = $2 WHERE email = $3", [OTP, new Date(Date.now() + 3000 * 60).toISOString(), user.email]);
         transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: email,
@@ -136,9 +137,63 @@ router.post("/forgot-password", async (req, res) => {
         return res.status(200).json({message: "OTP sent succesfully to your email."});
           
     } catch(err) {
+        console.log(err);
         return res.status(500).json({message: "Internal server error"});
     }
 
     
+})
+
+router.post("/otp-verification", async (req, res) => {
+    try {
+    const {OTP, email} = req.body;
+
+    if (!OTP) {
+        return res.status(400).json({message: "otp is required for reset password process"});
+    }
+    const userResult = await pool.query("SELECT user_id, user_otp, user_otp_expires FROM users WHERE user_otp = $1 AND email = $2", [OTP, email]);
+
+    if (userResult.rows.length === 0) {
+        return res.status(400).json({message: "wrong otp try again later!"});
+    }
+    const user = userResult.rows[0];
+    const isOTPExpired = new Date(user.user_otp_expires).getTime() <  Date.now();
+    if(isOTPExpired) {
+        return res.status(400).json({message: "OTP has been expired"});
+    } else {
+    
+
+            if (user.user_otp == OTP) {
+                await pool.query("UPDATE users SET user_otp = null, user_otp_expires = null WHERE user_id = $1", [user.user_id]);
+                return res.status(200).json({message: "Succes! reset your password"});
+            } else {
+                return res.status(400).json({message: "Wrong credentials"});
+            }
+            
+
+        
+        }  
+    }  catch(err) {
+            console.log(err);
+            return res.status(500).json({message: "Internal server error"});
+        }
+})
+
+router.post("/resetPassword", async (req, res) => {
+    try {
+    const {newPassword, confirmPassword} = req.body;
+    if (!newPassword || !confirmPassword) {
+        return res.status(400).json({message: "Please fill out required fields"});
+    }
+    if (newPassword !== confirmPassword) {
+        return res.status(400).json({message: "Password does not match"});
+    }
+    const salt = bcrypt.genSalt(10);
+    const hashedPassword = bcrypt.hashSync()
+    } catch(err) {
+        console.log(err)
+        return res.status(500).json({message: "Internal server error"});
+    }
+
 })
 module.exports = {authRoute: router};

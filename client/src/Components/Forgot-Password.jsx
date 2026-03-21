@@ -9,8 +9,8 @@ function ForgotPassword() {
 
         if(!email) {
             alert("Email is required for password reset process.")
-
-        const res = fetch("http://localhost:3000/auth/forgot-password", {
+        }
+        const res = await fetch("http://localhost:3000/auth/forgot-password", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -18,15 +18,15 @@ function ForgotPassword() {
                 body: JSON.stringify({ email })
         });
 
-        const data = res.json();
+        const data = await res.json();
         if(res.ok) {
             alert(data.message);
             setEmail("");
             navigate("/OTPForm");
         } else {
-            alert("data.message");
+            alert(data.message);
         }
-    }
+    
 }
     return ( 
         <div>
