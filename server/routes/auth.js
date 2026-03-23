@@ -147,18 +147,23 @@ router.post("/forgot-password", async (req, res) => {
 router.post("/otp-verification", async (req, res) => {
     try {
     const {OTP, email} = req.body;
-
+    
     if (!OTP) {
         return res.status(400).json({message: "otp is required for reset password process"});
     }
     const userResult = await pool.query("SELECT user_id, user_otp, user_otp_expires FROM users WHERE user_otp = $1 AND email = $2", [OTP, email]);
 
     if (userResult.rows.length === 0) {
+        console.log(OTP);
+        console.log(`email ${email}`)
         return res.status(400).json({message: "wrong otp try again later!"});
     }
     const user = userResult.rows[0];
     const isOTPExpired = new Date(user.user_otp_expires).getTime() <  Date.now();
     if(isOTPExpired) {
+        console.log(isOTPExpired);
+        console.log(new Date(user.user_otp_expires));
+        console.log(Date.now());
         return res.status(400).json({message: "OTP has been expired"});
     } else {
     
@@ -179,17 +184,26 @@ router.post("/otp-verification", async (req, res) => {
         }
 })
 
-router.post("/resetPassword", async (req, res) => {
+router.post("/reset-password", async (req, res) => {
     try {
-    const {newPassword, confirmPassword} = req.body;
-    if (!newPassword || !confirmPassword) {
+        console.log(req.body.confirmPassword)
+    const {newPassword, confirmPassword, email} = req.body;
+    if (!newPassword || !confirmPassword || !email) {
+        console.log(`newPass: ${newPassword} confirmPass: ${confirmPassword} email: ${email}`)
         return res.status(400).json({message: "Please fill out required fields"});
     }
     if (newPassword !== confirmPassword) {
         return res.status(400).json({message: "Password does not match"});
     }
-    const salt = bcrypt.genSalt(10);
-    const hashedPassword = bcrypt.hashSync()
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    const userResult = pool.query("UPDATE users SET password = $1 WHERE email = $2 RETURNING user_id", [hashedPassword, email]);
+
+    if ((await userResult).rows.length === 0) {
+        return res.status(400).json({message: "User not found"})
+    }
+
+    return res.status(200).json({message: "Password reset succesfull"});
     } catch(err) {
         console.log(err)
         return res.status(500).json({message: "Internal server error"});

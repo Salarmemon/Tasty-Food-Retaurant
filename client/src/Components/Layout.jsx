@@ -12,11 +12,11 @@ import Retry from "./Retry";
 import Login from "./Login";
 import ForgetPassword from "./Forgot-Password";
 import OTPForm from "./OTPForm";
-import resetPassword from "./ResetPassword";
+import ResetPassword from "./ResetPassword";
 function Layout() {
     const [email, setEmail] = useState("");
     const location = useLocation();
-    const isSignupPage = location.pathname === "/" || location.pathname === "/retry" || location.pathname === "/login" || location.pathname === "/forgot-password" || location.pathname === "/OTPForm" || pathname === "/resetPassword";
+    const isSignupPage = location.pathname === "/" || location.pathname === "/retry" || location.pathname === "/login" || location.pathname === "/forgot-password" || location.pathname === "/OTPForm" || location.pathname === "/reset-password";
     return (
         <div>
             {!isSignupPage && <Header />}
@@ -30,7 +30,7 @@ function Layout() {
                 <Route path="/login" element={<Login email={email} setEmail={setEmail}/>} />
                 <Route path="/forgot-password" element={<ForgetPassword email={email} setEmail={setEmail}/>} />
                 <Route path="/OTPForm" element={<OTPForm email={email} setEmail={setEmail}/>}></Route>
-                <Route path="/resetPassword" element={<resetPassword email={email} setEmail={setEmail}/>}></Route>
+                <Route path="/reset-password" element={<ResetPassword email={email} setEmail={setEmail}/>}></Route>
             </Routes>
             {!isSignupPage && <Contact />}
         </div>

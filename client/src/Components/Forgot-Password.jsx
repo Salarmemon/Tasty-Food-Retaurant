@@ -21,7 +21,8 @@ function ForgotPassword() {
         const data = await res.json();
         if(res.ok) {
             alert(data.message);
-            setEmail("");
+            localStorage.setItem("email", email)
+        
             navigate("/OTPForm");
         } else {
             alert(data.message);
@@ -35,7 +36,7 @@ function ForgotPassword() {
                 
                 <label htmlFor="email">Enter your email:</label>
                 <input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)}requiired className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 mb-4 bg-gray-200 "/>
-                 <button type="submit" className="w-full h-16 rounded-lg bg-gradient-to-t from-yellow-600 to bg-yellow-300 hover:from-yellow-300 hover:to-yellow-600 hover:scale-105 font-extrabold text-center">Submit</button>
+                 <button type="submit"  className="w-full h-16 rounded-lg bg-gradient-to-t from-yellow-600 to bg-yellow-300 hover:from-yellow-300 hover:to-yellow-600 hover:scale-105 font-extrabold text-center">Submit</button>
             </form>
         </div>
     )

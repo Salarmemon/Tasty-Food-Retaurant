@@ -8,7 +8,7 @@ function OTPForm({email, setEmail}) {
 
     const handleOTP = async (e) => {
         e.preventDefault();
-
+        setEmail(localStorage.getItem("email"))
         if (!OTP) {
             alert("Please enter your OTP");
             return
@@ -25,7 +25,7 @@ function OTPForm({email, setEmail}) {
         if(res.ok) {
             setOTP("");
             alert(data.message);
-            navigate("/resetPassword");
+            navigate("/reset-password");
         } else {
             alert(data.message); 
         }
