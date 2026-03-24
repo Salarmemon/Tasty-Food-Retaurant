@@ -88,7 +88,18 @@ router.post('/login', async (req, res) => {
         }
         const user = result.rows[0];
         if (!user.is_verified) {
-            return res.status(403).json({message: "Please verify your email first:"})
+            const verificationToken = crypto.randomBytes(32).toString("hex");
+            await pool.query("UPDATE users SET user_token = $1 WHERE email = $2", [verificationToken, email]);
+            const verificationLink = `http://localhost:3000/auth/verify/${verificationToken}`;
+            transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: "User verification link",
+                html: `<p>Please click the following link to verify your email address.
+                <br>
+                <a href="${verificationLink}">Verify Email</a></p>`
+            })         
+            return res.status(403).json({message: "Please verify your email first: The verification link has been sent to your email address"});
         }
         const isPasswordValid = bcrypt.compareSync(password, user.password);
         if (!isPasswordValid) {
@@ -106,7 +117,7 @@ router.get("/verify/:token", async (req, res) => {
     const { token } = req.params;
     try {
     await pool.query("UPDATE users SET is_verified = True, user_token = NULL WHERE user_token = $1", [token])
-    res.send("Verification Succesfull");
+    res.send("<p>Verification Succesfull</p>");
     } catch(err) {
         return res.status(500).json({message: "Internal server error"});
     }
