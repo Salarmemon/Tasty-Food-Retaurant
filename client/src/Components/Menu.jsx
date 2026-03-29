@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
-
+import { useNavigate } from "react-router-dom";
 function Menu() {
-    const [menuItems, setMenuItems] = useState([]);
-
+   const [menuItems, setMenuItems] = useState([])
+   const navigate = useNavigate();
+    const handleOrderNow = (item) => {
+      localStorage.setItem("selectedDish", JSON.stringify({
+        name: item.name, price: item.price
+      }))
+      navigate("/orderForm")
+    }
     useEffect(() => {
         fetch("http://localhost:3000/menu")
         .then((response) =>response.json())
@@ -25,6 +31,7 @@ function Menu() {
                   </p>
                   <img src={item.image} alt={item.name} className="item-image w-40 m-auto" />
                   <p className="item-price">{`$${item.price}`}</p>
+                  <button onClick={(e) => handleOrderNow(item)}className="p-5 premium-btn block mx-auto bg-gradient-to-t from-green-300 to-green-400 hover:scale-105 hover:from-green-400 hover:to-green-200 w-1/2 text-center rounded-3xl">Order Now!</button>
                 </div>
               ))}
             </section>

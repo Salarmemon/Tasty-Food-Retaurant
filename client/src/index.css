@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.premium-btn {
+    background: linear-gradient(130deg, #4ade80, #16a34a);
+    animation: Pulse 2s ease-in-out infinite;
+}
+
+@keyframes Pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}

@@ -7,6 +7,16 @@ const crypto = require("crypto");
 const { userInfo } = require('os');
 
 ;
+// utlity functions
+
+// check is some value is empty 
+/*
+const checkEmpty = (value1, value2="1", value3="1", message, status) => {
+    if (!value1 || !value2 || !value3) {
+        return res.status.(status).json({message: message});
+    }
+}
+  */
 const generateOtp = ()=> {
     const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     let otp = "";
@@ -219,6 +229,11 @@ router.post("/reset-password", async (req, res) => {
         console.log(err)
         return res.status(500).json({message: "Internal server error"});
     }
+
+})
+
+router.post("resend-otp", (req, res) => {
+    const {email} = req.body;
 
 })
 module.exports = {authRoute: router};
