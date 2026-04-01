@@ -6,11 +6,12 @@ function resetPassword({email, setEmail}) {
     const navigate = useNavigate();
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [resetToken, setResetToken] = useState("");
 
     const handleReset = async (e) => {
         e.preventDefault();
 
-        if (!newPassword || !confirmPassword) {
+        if (!newPassword || !confirmPassword || !resetToken) {
             alert("Please fill out the required fields");
             return
         }
@@ -20,12 +21,13 @@ function resetPassword({email, setEmail}) {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ newPassword, confirmPassword, email})
+            body: JSON.stringify({ newPassword, confirmPassword, email, resetToken}),
         });
         const data = await res.json();
         if(res.ok) {
             setNewPassword("");
             setConfirmPassword("");
+            setResetToken("");
             alert(data.message);
             navigate("/login");
         } else {
@@ -40,9 +42,11 @@ function resetPassword({email, setEmail}) {
                 
                 <label htmlFor="new-password">New password</label>
                 <input type="password" id="new-password" name="new-password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}required minLength="8" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 mb-4 bg-gray-200 "/>
-            
+
                 <label htmlFor="confirm-password">Retype password</label>
-                <input type="password" id="confirm-password" name="confirm-password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}required minLength="8" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 mb-4 bg-gray-200 "/>
+                <input type="password" id="confirm-password" name="confirm-password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}required minLength="8" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 mb-4 bg-gray-200 "/ >
+                <label htmlFor="reset-token">Reset token</label>
+                <input type="text" id="reset-token" name="reset-token" value={resetToken} onChange={(e) => setResetToken(e.target.value)} required className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 mb-4 bg-gray-200 "/>
             
                  <button type="submit" className="w-full h-16 rounded-lg bg-gradient-to-t from-yellow-600 to bg-yellow-300 hover:from-yellow-300 hover:to-yellow-600 hover:scale-105 font-extrabold text-center">Reset</button>
             </form>

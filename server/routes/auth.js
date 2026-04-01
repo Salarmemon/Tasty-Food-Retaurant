@@ -190,14 +190,14 @@ router.post("/otp-verification", async (req, res) => {
     
 
             if (user.user_otp == OTP) {
-                await pool.query("UPDATE users SET user_otp = null, user_otp_expires = null WHERE user_id = $1", [user.user_id]);
-                return res.status(200).json({message: "Succes! reset your password"});
+                const resetToken = crypto.randomBytes(32).toString("hex");
+                const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+                await pool.query("UPDATE users SET user_otp = null, user_otp_expires = null, reset_token = $1, reset_token_expires = $2 WHERE user_id = $3", [resetToken, expiresAt, user.user_id]);
+                return res.status(200).json({message: "Succes! reset your password using the reset token", resetToken: resetToken});
             } else {
                 return res.status(400).json({message: "Wrong credentials"});
             }
             
-
-        
         }  
     }  catch(err) {
             console.log(err);
@@ -207,10 +207,10 @@ router.post("/otp-verification", async (req, res) => {
 
 router.post("/reset-password", async (req, res) => {
     try {
-        console.log(req.body.confirmPassword)
-    const {newPassword, confirmPassword, email} = req.body;
-    if (!newPassword || !confirmPassword || !email) {
-        console.log(`newPass: ${newPassword} confirmPass: ${confirmPassword} email: ${email}`)
+        
+    const {newPassword, confirmPassword, email, resetToken} = req.body;
+    if (!newPassword || !confirmPassword || !email || !resetToken) {
+
         return res.status(400).json({message: "Please fill out required fields"});
     }
     if (newPassword !== confirmPassword) {
@@ -218,11 +218,11 @@ router.post("/reset-password", async (req, res) => {
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
-    const userResult = pool.query("UPDATE users SET password = $1 WHERE email = $2 RETURNING user_id", [hashedPassword, email]);
-
-    if ((await userResult).rows.length === 0) {
-        return res.status(400).json({message: "User not found"})
+    const userResult = await pool.query("SELECT reset_token, reset_token_expires FROM users WHERE email = $1 AND reset_token = $2", [email, resetToken]);
+    if ( userResult.rows.length === 0) {
+        return res.status(400).json({message: "User not found or wrong reset token or email"});
     }
+    await pool.query("UPDATE users SET password = $1 WHERE email = $2 RETURNING user_id", [hashedPassword, email]);
 
     return res.status(200).json({message: "Password reset succesfull"});
     } catch(err) {

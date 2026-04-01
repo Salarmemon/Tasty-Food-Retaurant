@@ -31,15 +31,19 @@ function OTPForm({email, setEmail}) {
         }
     }
     const resendOTP = async () => {
-        const data = await fetch("http://localhost:300/auth/resendOTP", {
+        const data = await fetch("http://localhost:3000/auth/resend-otp", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: {
-                
-            }
+            body: JSON.stringify({email})
         })
+        const resData = await data.json();
+        if (data.ok) {
+            alert(resData.message);
+        } else {
+            alert(resData.message);
+        }
     }
      return ( 
         <div>
@@ -51,7 +55,7 @@ function OTPForm({email, setEmail}) {
                  <button type="submit" className="w-full h-16 rounded-lg bg-gradient-to-t from-yellow-600 to bg-yellow-300 hover:from-yellow-300 hover:to-yellow-600 hover:scale-105 font-extrabold text-center">Submit</button>
                  
             </form>
-            <button type="button" id="resend-btn" className="w-1/2 h-16 rounded-lg bg-gradient-to-tr from bg-green-50 to-green-200 hover:from-green-200 hover:to-green-50 hover:scale:105 font-bold text-center" onClick={resendOTP}>Resend OTP</button>
+            <button type="button" id="resend-btn" className="w-1/2 h-16 rounded-lg bg-gradient-to-tr from bg-green-200 to-green-400 hover:from-green-400 hover:to-green-200 hover:scale:105 font-bold text-center" onClick={resendOTP}>Resend OTP</button>
         </div>
     )
 } 
