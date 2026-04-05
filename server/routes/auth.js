@@ -10,13 +10,13 @@ const { userInfo } = require('os');
 // utlity functions
 
 // check is some value is empty 
-/*
-const checkEmpty = (value1, value2="1", value3="1", message, status) => {
-    if (!value1 || !value2 || !value3) {
-        return res.status.(status).json({message: message});
-    }
+
+const checkEmpty = ([...values]) => {
+
+    isEmpty = values.some(value => !value);
+    return isEmpty;
 }
-  */
+        
 const generateOtp = ()=> {
     const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     let otp = "";
@@ -43,7 +43,7 @@ router.post('/signup', async (req, res) => {
     // Handle user signup logic here
     
     const { name, email, password } = req.body;
-    if (!name || !email || !password) {
+    if (checkEmpty(name, email, password)) {
         return res.status(400).json({ message: "Name, email and password are required" });
     
     }
@@ -86,7 +86,7 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
 
     const { email, password } = req.body;
-    if (!email || !password) {
+    if (checkEmpty(email, password)) {
         return res.status(400).json({ message: "Email and password are required" });
 
     }
@@ -135,7 +135,7 @@ router.get("/verify/:token", async (req, res) => {
 
 router.post("/forgot-password", async (req, res) => {
     const { email } = req.body;
-    if (!email) {
+    if (checkEmpty(email)) {
         return res.status(400).json({message: "email is required"})
     }
 
@@ -169,7 +169,7 @@ router.post("/otp-verification", async (req, res) => {
     try {
     const {OTP, email} = req.body;
     
-    if (!OTP) {
+    if (checkEmpty(OTP)) {
         return res.status(400).json({message: "otp is required for reset password process"});
     }
     const userResult = await pool.query("SELECT user_id, user_otp, user_otp_expires FROM users WHERE user_otp = $1 AND email = $2", [OTP, email]);
@@ -193,7 +193,7 @@ router.post("/otp-verification", async (req, res) => {
                 const resetToken = crypto.randomBytes(32).toString("hex");
                 const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
                 await pool.query("UPDATE users SET user_otp = null, user_otp_expires = null, reset_token = $1, reset_token_expires = $2 WHERE user_id = $3", [resetToken, expiresAt, user.user_id]);
-                return res.status(200).json({message: "Succes! reset your password using the reset token", resetToken: resetToken});
+                return res.status(200).json({message: `Succes! reset your password using the reset token: ${resetToken}`});
             } else {
                 return res.status(400).json({message: "Wrong credentials"});
             }
@@ -209,7 +209,7 @@ router.post("/reset-password", async (req, res) => {
     try {
         
     const {newPassword, confirmPassword, email, resetToken} = req.body;
-    if (!newPassword || !confirmPassword || !email || !resetToken) {
+    if (checkEmpty(newPassword, confirmPassword, email, resetToken)) {
 
         return res.status(400).json({message: "Please fill out required fields"});
     }
@@ -230,10 +230,7 @@ router.post("/reset-password", async (req, res) => {
         return res.status(500).json({message: "Internal server error"});
     }
 
-})
+});
 
-router.post("resend-otp", (req, res) => {
-    const {email} = req.body;
 
-})
 module.exports = {authRoute: router};

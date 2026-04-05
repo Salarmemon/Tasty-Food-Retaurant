@@ -3,10 +3,68 @@
 @tailwind utilities;
 
 .premium-btn {
-    background: linear-gradient(130deg, #4ade80, #16a34a);
     animation: Pulse 2s ease-in-out infinite;
 }
 
+.grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap:25px;
+}  
+
+.menu-item {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.menu-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.4);
+    
+}
+
+.logo {
+    animation: Pulse 3s ease-in-out infinite;
+}
+
+.draw {
+  stroke-dasharray: 314; /* Circumference of the circle (2 * π * r) */
+  stroke-dashoffset: 314;
+  animation: drawLine 1.5s linear forwards,
+             fillPlate 1.5s linear forwards;
+
+}
+
+/* Delays for premium effect */
+.plate{
+    
+  animation-delay: 1.5s, 2s; /* Delay for drawLine and fillPlate */
+  
+}
+
+.delay2 {
+  animation-delay: 1s;
+}
+
+.text-fade {
+  opacity: 0;
+  animation: fadeIn 2s ease forwards;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fillPlate {
+  to {
+    fill: #ff6347; /* Tomato color */
+  }
+}
+@keyframes drawLine {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
 @keyframes Pulse {
     0% {
         transform: scale(1);
@@ -14,4 +72,11 @@
     50% {
         transform: scale(1.05);
     }
+}
+
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
 }

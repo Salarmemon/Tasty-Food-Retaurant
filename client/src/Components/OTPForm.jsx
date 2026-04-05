@@ -8,7 +8,7 @@ function OTPForm({email, setEmail}) {
 
     const handleOTP = async (e) => {
         e.preventDefault();
-        setEmail(localStorage.getItem("email"))
+    
         if (!OTP) {
             alert("Please enter your OTP");
             return
@@ -19,7 +19,7 @@ function OTPForm({email, setEmail}) {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ OTP, email })
+            body: JSON.stringify({ OTP, email: localStorage.getItem("email") })
         });
         const data = await res.json();
         if(res.ok) {
@@ -31,12 +31,12 @@ function OTPForm({email, setEmail}) {
         }
     }
     const resendOTP = async () => {
-        const data = await fetch("http://localhost:3000/auth/resend-otp", {
+        const data = await fetch("http://localhost:3000/auth/forgot-password", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({email})
+            body: JSON.stringify({email: localStorage.getItem("email")})
         })
         const resData = await data.json();
         if (data.ok) {
@@ -55,7 +55,7 @@ function OTPForm({email, setEmail}) {
                  <button type="submit" className="w-full h-16 rounded-lg bg-gradient-to-t from-yellow-600 to bg-yellow-300 hover:from-yellow-300 hover:to-yellow-600 hover:scale-105 font-extrabold text-center">Submit</button>
                  
             </form>
-            <button type="button" id="resend-btn" className="w-1/2 h-16 rounded-lg bg-gradient-to-tr from bg-green-200 to-green-400 hover:from-green-400 hover:to-green-200 hover:scale:105 font-bold text-center" onClick={resendOTP}>Resend OTP</button>
+            <button type="button" id="resend-btn" className="w-1/3 h-16 rounded-lg bg-gradient-to-tr from bg-green-200 to-green-400 hover:from-green-400 hover:to-green-200 hover:scale:105 font-bold text-center" mx-auto onClick={resendOTP}>Resend OTP</button>
         </div>
     )
 } 

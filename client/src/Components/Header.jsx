@@ -2,8 +2,56 @@ import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
-    <nav className="bg-[#030793] p-4 flex justify-between font-text items-center shadow-md fixed w-full top-0 left-0 z-30 flex-wrap flex-col md:flex-row hover:bg-blue-700 transition-all ease-in ">
-        <div className="logo font-bold text-gray-100 ml-6 w-16 h-16  lg:w-24 lg:h-24 text-center hover:scale-110 bg-blue-400 rounded-2xl p-4 transition-all ease hover:bg-blue-500"><img src="src/assets/logo.png" className="w-full h-auto" alt="restaurant's logo"/></div>
+    <nav className="bg-orange-900 p-4 flex justify-between font-text items-center shadow-md fixed w-full top-0 left-0 z-30 flex-wrap flex-col md:flex-row hover:bg-orange-700 transition-all ease-in ">
+        <div className="logo font-bold text-gray-100 ml-6 w-24 h-16  lg:w-32 lg:h-28 text-center shadow-lg  hover:scale-110  hover:rotate-3 bg-orange-900 rounded-2xl p-4 transition-all ease hover:bg-orange-700">
+         <svg viewBox="0 0 140 140" className="w-full h-full mx-auto transition-all hover:scale-110" fill="none">
+  
+  {/* Plate */}
+  <circle 
+    className="draw"
+    cx="70" cy="70" r="50"
+    stroke="white"
+    strokeWidth="2"
+    
+  />
+
+  {/* Steam lines */}
+  <path 
+    className="draw delay1 plate"
+    d="M40 30 Q45 20 50 30"
+    stroke="white"
+    strokeWidth="2"
+    fill="none"
+  />
+
+  <path 
+    className="draw delay2"
+    d="M50 30 Q55 20 60 30"
+    stroke="white"
+    strokeWidth="2"
+    fill="none"
+  />
+<svg viewBox="0 0 120 120" className="w-full h-full mx-auto" fill="none">
+
+<text
+    x="60"
+    y="10"
+    textAnchor="middle"
+    className="text-fade"
+    fontSize="14"
+    fill="white"
+    stroke="white"
+    strokeWidth="0.2"
+  >
+    Tasty Restaurant
+  </text>
+
+
+
+</svg>
+</svg>
+          </div>
+
         <ul className="nav-links flex space-x-6 mr-12">
             <li><Link to="/home" className="link text-gray-200 inline-block hover:text-gray-900 font-bold hover:scale-110 transition-all duration-200 hover:animate-pulse text-sm sm:text-bas e md:text-lg hover:scale-125">Home</Link></li>
             <li>
