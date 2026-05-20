@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const dishes = [
   {
@@ -49,12 +50,12 @@ function Home() {
         <h2 className="text-xl font-bold text-gray-800 mb-4 md:text-4xl text-center font-heading">Our Dishes</h2>
         <div className="grid">
          {dishes.map((dish) => (
-          <div key={dish.id} className="dish bg-gradient-to-tr from-orange-500 to-orange-600 rounded-lg shadow-md overflow-hidden font-extrabold hover:shadow-lg transition-all duration-300 hover:scale-105 hover:bg-gray-200  text-center ">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{once: true}} transition={{delay: 0.2, duration: 0.6}} key={dish.id} className="dish bg-gradient-to-tr from-orange-500 to-orange-600 rounded-lg shadow-md overflow-hidden font-extrabold hover:shadow-lg transition-all duration-300 hover:scale-105 hover:bg-gray-200  text-center ">
             <p className="description p-4 text-gray-900">{dish.description}</p>
             <img src={dish.image} alt={dish.name} className="w-full h-48 object-cover"/>
             <p className="price p-4 text-gray-800 font-bold">{dish.price}</p>
             <Link to="./OrderForm" className="bg-gradient-to-tr from-orange-700 to bg-orange-800 text-gray-100 w-1/3 h-8 rounded-3xl hover:from-orange-700 hover:to-orange-500 hover:scale-105 inline-block premium-btn" >Order Now!</Link>
-          </div>
+          </motion.div>
          ))}
 
         </div>

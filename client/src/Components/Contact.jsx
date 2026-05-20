@@ -1,8 +1,8 @@
 import {FaGithub, FaLinkedin, FaFacebook} from 'react-icons/fa';
-
+import { motion } from 'framer-motion';
 function Contact() {
     return (
-        <footer className=" text-gray-100 container mx-auto px-4 py-8 bg-gradient-to-r from-slate-900 font-text to-slate-800 flex justify-center items-center flex-col">
+        <motion.footer initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{once:true}} transition={{opacity: { delay: 0.6 }, duration: 0.8, ease: "ease"}} className=" text-gray-100 container mx-auto px-4 py-8 bg-gradient-to-r from-slate-900 font-text to-slate-800 flex justify-center items-center flex-col">
             <h2 className="text-xl font-bold font-heading text-gray-100 mb-6 text-center md:text-6xl flex justify-center align-middle">Contact Us</h2> 
             <p>&#169; 2026 Salar Memon All Right Reserved</p>
             <p className=" mb-4">We'd love to hear from you! Whether you have a question about our menu, want to provide feedback, or just want to say hello, feel free to reach out to us. You can contact us via email at
@@ -25,7 +25,7 @@ function Contact() {
         </a>
     </div>
 
-        </footer>
+        </motion.footer>
     );
 }  
 

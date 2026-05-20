@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    font-weight: 600;
+    padding: 0;
+    margin: 0;
+}
 .premium-btn {
     animation: Pulse 2s ease-in-out infinite;
 }
